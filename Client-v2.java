@@ -220,10 +220,21 @@ public class Client extends Thread {
     	Transactions transact = new Transactions();
     	long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
      
-         /*................................................................................................................................................................................................................*/
+        if (getClientOperation().equals("sending")) {
+            sendClientStartTime = System.currentTimeMillis();
+            sendTransactions();
+            sendClientEndTime = System.currentTimeMillis();
+            System.out.println("\nTerminating client sending thread, Running time - " + (sendClientEndTime -sendClientStartTime) + " milliseconds");
+            //Network.setClientConnectionStatus("Connected");
+        }
               
-                System.out.println("\n Terminating client receiving thread - " + " Running time " +  (receiveClientEndTime - receiveClientStartTime));
-            }
+        if (getClientOperation().equals("receiving")) {
+            receiveClientStartTime = System.currentTimeMillis();
+            receiveTransactions(transact);
+            receiveClientEndTime = System.currentTimeMillis();
+            System.out.println("\nTerminating client receiving thread, Running time - " + (receiveClientEndTime -receiveClientStartTime) + " milliseconds");
+            //Network.disconnect(Network.getClientIP());
+        }
                 
     }
 }
