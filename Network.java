@@ -558,9 +558,19 @@ public class Network extends Thread {
     {	
     	/* System.out.println("\n DEBUG : Network.run() - starting network thread"); */
     	
-    	while (true)
-    	{
-    		/*................................................................................................................................................................*/
-    	}    
-    }
-}
+        while (true) {
+            /* Implement here the code for the run method ... */
+            if (this.getInBufferStatus().equals("empty") && this.getOutBufferStatus().equals("empty") || (getInBufferStatus().equals("full") && this.getOutBufferStatus().equals("full"))) {
+                Thread.yield();
+            }
+
+            if (getServerConnectionStatus().equals("connected") || getClientConnectionStatus().equals("connected")) {
+                Thread.yield();
+            }
+
+            if (getClientConnectionStatus().equals("disconnected") && getServerConnectionStatus().equals("disconnected")) {
+                System.out.println("\nTerminating network thread - Client disconnected Server disconnected");
+                break;
+            }
+        }
+    }}
