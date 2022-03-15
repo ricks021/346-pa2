@@ -31,6 +31,7 @@ public class Client extends Thread {
         if (operation.equals("sending"))
         {
             System.out.println("\n Initializing client sending application ...");
+            while (!Network.getServerConnectionStatus().equals("connected")) Thread.yield();
             numberOfTransactions = 0;
             maxNbTransactions = 100;
             transaction = new Transactions[maxNbTransactions];
@@ -121,6 +122,7 @@ public class Client extends Thread {
         {
             try
             {   transaction[i] = new Transactions();
+
                 transaction[i].setAccountNumber(inputStream.next());            /* Read account number */
                 transaction[i].setOperationType(inputStream.next());            /* Read transaction type */
                 transaction[i].setTransactionAmount(inputStream.nextDouble());  /* Read transaction amount */
@@ -155,10 +157,10 @@ public class Client extends Thread {
         while (i < getNumberOfTransactions())
         {
 
-            //	 while (Network.getInBufferStatus().equals("full"))
-            //	{
-            // 	  Thread.yield(); 	/* Yield the cpu if the network input buffer is full */
-            //  }
+            	 while (Network.getInBufferStatus().equals("full"))
+            	{
+             	  Thread.yield(); 	/* Yield the cpu if the network input buffer is full */
+              }
 
             transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
 
@@ -182,11 +184,11 @@ public class Client extends Thread {
 
         while (i < getNumberOfTransactions())
         {
-            // while (Network.getOutBufferStatus().equals("empty"))
-            // {
-            //	 Thread.yield(); 	/* Yield the cpu if the network output buffer is full */
+             while (Network.getOutBufferStatus().equals("empty"))
+             {
+            	 Thread.yield(); 	/* Yield the cpu if the network output buffer is full */
 
-            // }
+             }
 
             Network.receive(transact);                               	/* Receive updated transaction from the network buffer */
 
