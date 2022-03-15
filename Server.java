@@ -142,7 +142,7 @@ public class Server extends Thread {
        * Mutator method of Server class
        * 
        * @return 
-       * @param tId
+       * @param
        */
        public void setServerThreadId(String stid)
        { 
@@ -415,21 +415,33 @@ public class Server extends Thread {
      */
       
     public void run()
-    {   Transactions trans = new Transactions();
-    	 long serverStartTime, serverEndTime;
-    
-	/* System.out.println("\n DEBUG : Server.run() - starting server thread " + getServerThreadId() + " " + Network.getServerConnectionStatus()); */
-    	
-	Transactions trans = new Transactions();
-    	long serverStartTime, serverEndTime;
-    
-	/* System.out.println("\n DEBUG : Server.run() - starting server thread " + objNetwork.getServerConnectionStatus()); */
-    	
-    	/* .....................................................................................................................................................................................................*/
-        
+    {   while (!Network.getClientConnectionStatus().equals("connected"))
+    {
+        Thread.yield();
+    }
+
+
+
+        Transactions trans = new Transactions();
+        long serverStartTime = System.currentTimeMillis();
+
+        processTransactions(trans);
+
+        long serverEndTime = System.currentTimeMillis();
+
+         System.out.println("\n DEBUG : Server.run() - starting server thread " + getServerThreadId() + " " + Network.getServerConnectionStatus());
+
+
+         System.out.println("\n DEBUG : Server.run() - starting server thread " + Network.getServerConnectionStatus());
+
+        /* .....................................................................................................................................................................................................*/
+
         System.out.println("\n Terminating server thread - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
+        Network.disconnect(Network.getServerIP());
+
+    }
 	
     }
-}
+
 
 
